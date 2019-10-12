@@ -88,9 +88,39 @@ function pasteLog()
     }
     document.getElementById("logpage").innerHTML = x;
 }
-function addVar(varName, value)
+function getParsedValue(data)
 {
-    window[varName] = value;
+    const { value, type } = data;
+    switch (type) {
+        case 'CHAR':
+            return value.charCodeAt(0);
+        case 'INT':
+            return parseInt(value, 10);
+        default:
+            return value;
+    }
+}
+function updateDataValue(varName, value, type){
+    switch (type) {
+        case 'CHAR':
+            value = String.fromCharCode(value).charAt(0);
+        default:
+            break;
+    }
+    let parent = document.getElementById(varName);
+    let valElem = parent.getElementsByClassName("rval")[0];
+    valElem.innerText = value;
+    window[varName] = {
+        value,
+        type,
+    };
+}
+function addVar(varName, value, type)
+{
+    window[varName] = {
+        value,
+        type,
+    };
     document.getElementById("calcArea").insertAdjacentHTML('beforeend',`<div class="row" id="`+varName+`">
     <div class="column">
                 <div class="ui one column grid">
@@ -165,7 +195,7 @@ function addVar(varName, value)
         </div>
     </div>
 </div>`);
-getBit(value, varName);
+getBit(getParsedValue(window[varName]), varName);
 document.getElementById("cell_"+varName).onclick = function select(){
     this.classList.toggle('blue');
     this.classList.remove('olive');
@@ -193,11 +223,9 @@ function flowControl()
 
 function modifyVal(varName, value)
 {
-    let parent = document.getElementById(varName);
-    let valElem = parent.getElementsByClassName("rval")[0];
-    window[varName] = value;
-    valElem.innerText = window[varName]
-    getBit(parseInt(valElem.innerText), varName);
+    const { type } = window[varName];
+    updateDataValue(varName, value, type);
+    getBit(getParsedValue(window[varName]), varName);
 }
 
 function LShift()
@@ -210,8 +238,8 @@ function LShift()
         varName = src[i].innerText;
         let parent = document.getElementById(varName);
         parent.getElementsByClassName("delBit")[1].innerText = "";
-        parent.getElementsByClassName("delBit")[0].innerText = (window[varName]>>31)&1;
-        modifyVal(varName,window[varName]<<1);
+        parent.getElementsByClassName("delBit")[0].innerText = (getParsedValue(window[varName])>>31)&1;
+        modifyVal(varName,getParsedValue(window[varName])<<1);
         i--;
         logger(varName+'<<=1;');
     }
@@ -228,8 +256,8 @@ function RShift()
         varName = src[i].innerText;
         let parent = document.getElementById(varName);
         parent.getElementsByClassName("delBit")[0].innerText = "";
-        parent.getElementsByClassName("delBit")[1].innerText = window[varName]&1;
-        modifyVal(varName,window[varName]>>1);
+        parent.getElementsByClassName("delBit")[1].innerText = getParsedValue(window[varName])&1;
+        modifyVal(varName,getParsedValue(window[varName])>>1);
         i--;
         logger(varName+'>>=1;');
     }
@@ -494,8 +522,8 @@ function getVar()
     let y = prompt("Enter Value");
     if(isNaN(parseInt(y, 10)))
     {
-        addVar(x, y.charAt(0));
+        addVar(x, y.charAt(0), 'CHAR');
     } else {
-        addVar(x, parseInt(y));
+        addVar(x, parseInt(y, 10), 'INT');
     }
 }

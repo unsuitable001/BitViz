@@ -492,12 +492,10 @@ function getVar()
 {
     let x = prompt("Enter Variable Name");
     let y = prompt("Enter Value");
-    if(isNaN(parseInt(y)))
+    if(isNaN(parseInt(y, 10)))
     {
-        addVar(x, y.charCodeAt(0));
-    }
-    else{
-
+        addVar(x, y.charAt(0));
+    } else {
         addVar(x, parseInt(y));
     }
 }

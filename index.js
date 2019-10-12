@@ -2,6 +2,42 @@ window._logger_flag_ufectrtvo78rtweafdhdg76743hg = 0;
 window.lastdata = "";
 window._log_multiply_factor_jhhdgyfdsgvlsdfyvyukfd = 1;
 sessionStorage.clear();
+document.body.onkeydown = function(){
+    Controls(event);
+}
+document.getElementById("modalClose").onclick = function(){
+    this.parentElement.classList.remove('active');
+}
+document.getElementById("helpClose").onclick = function(){
+    this.parentElement.classList.remove('active');
+}
+document.getElementById("getVar").onclick = function() {
+    getVar();
+}
+document.getElementById("RShift").onclick = function(){
+    RShift();
+}
+document.getElementById("LShift").onclick = function(){
+    LShift();
+}
+document.getElementById("AND").onclick = function(){
+    AND();
+}
+document.getElementById("OR").onclick = function(){
+    OR();
+}
+document.getElementById("XOR").onclick = function(){
+    XOR();
+}
+document.getElementById("NOT").onclick = function(){
+    NOT();
+}
+document.getElementById("pasteLog").onclick = function(){
+    pasteLog();
+}
+document.getElementById("helpbtn").onclick = function(){
+    document.getElementById("helpModal").classList.add("active");
+}
 window.onbeforeunload = function(){
     return "If you leave the page, your progress will be lost.";
 }
@@ -55,7 +91,7 @@ function pasteLog()
 function addVar(varName, value)
 {
     window[varName] = value;
-    document.getElementById("calcArea").innerHTML+=`<div class="row" id="`+varName+`">
+    document.getElementById("calcArea").insertAdjacentHTML('beforeend',`<div class="row" id="`+varName+`">
     <div class="column">
                 <div class="ui one column grid">
                     <div class="column">
@@ -122,15 +158,21 @@ function addVar(varName, value)
         <div class="ui one column grid">
             <div class="column">
                 <div class="ui celled two column grid">
-                    <div class="column" onclick="this.classList.toggle('blue');this.classList.remove('olive');" ondblclick="this.classList.toggle('olive');">`+varName+`</div>
+                    <div class="column" id="cell_`+varName+`">`+varName+`</div>
                     <div class="rval column">`+value+`</div>
                 </div>
             </div>
         </div>
     </div>
-</div>`;
+</div>`);
 getBit(value, varName);
-logger(varName+'='+value+';');
+document.getElementById("cell_"+varName).onclick = function select(){
+    this.classList.toggle('blue');
+    this.classList.remove('olive');
+};
+document.getElementById("cell_"+varName).ondblclick = function dblselect(){
+    this.classList.toggle('olive');
+};
 }
 
 function flowControl()
@@ -459,4 +501,3 @@ function getVar()
         addVar(x, parseInt(y));
     }
 }
-

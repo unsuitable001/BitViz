@@ -5,71 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>BitViz - A Bitwise Operation Visualizer</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" href="semantic.min.css">
 </head>
-<body onkeydown="Controls(event);">
+<body>
     <div class="ui modal" id="logModal">
         <div class="header">Execution Log</div>
         <div class="scrolling content">
           <p id="logpage"></p>
         </div>
-        <div class="ui fluid negative button" onclick="this.parentElement.classList.remove('active');">CLOSE</div>
+        <div class="ui fluid negative button" id="modalClose">CLOSE</div>
+    </div>
+    <div class="ui modal" id="helpModal">
+        <img class="ui huge image" src="qhelp.jpg">
+        <div class="ui fluid negative button" id="helpClose">CLOSE</div>
+        <a href="https://github.com/unsuitable001/BitViz/blob/master/README.md" target="_blank"><div class="ui fluid pink button">FULL HELP</div></a>
+        <a href="https://github.com/unsuitable001/BitViz/wiki" target="_blank"><div class="ui fluid black button">WIKI</div></a>
     </div>
     <div class="ui center aligned primary segment">
+        <div class="ui small image"><img src="icon.png"></div>
         <h1> BitViz - A Bitwise Operation Visualizer</h1>
-        <div class="right aligned ui button">
-            <i class="github icon"></i>
-        </div>
+        <a href="https://github.com/unsuitable001/BitViz">
+            <i class="ui large black github icon"></i>
+        </a>
+        <a href="https://twitter.com/unsuitable001/">
+            <i class="ui large twitter icon"></i>
+        </a>
+        <a href="https://gitter.im/unsuitable001/">
+            <i class="ui large pink gitter icon"></i>
+        </a>
 	</div>
 	<div id="cnPanel">
-		<div class="ui ten column centered grid">
+		<div class="ui nine column centered grid">
 			<div class="column">
-				<div class="fluid ui primary button" onclick="getVar();">
+				<div class="fluid ui primary button" id="getVar">
 					<i class="plus icon"></i> New Variable
 				</div>
 			</div>
 			<div class="column">
-				<div class="fluid ui positive button" onclick="RShift();">
+				<div class="fluid ui positive button" id="RShift">
 					<i class="angle double right icon"></i>
 				</div>
             </div>
             <div class="column">
-				<div class="fluid ui positive button" onclick="LShift();">
+				<div class="fluid ui positive button" id="LShift">
 					<i class="angle double left icon"></i>
 				</div>
 			</div>
 			<div class="column">
-				<div class="fluid ui positive button" onclick="AND();">
+				<div class="fluid ui positive button" id="AND">
 					<i class="magic icon"></i>AND
 				</div>
             </div>
             <div class="column">
-				<div class="fluid ui positive button" onclick="OR();">
+				<div class="fluid ui positive button" id="OR">
 					<i class="magic icon"></i>OR
 				</div>
             </div>
             <div class="column">
-				<div class="fluid ui positive button" onclick="XOR();">
+				<div class="fluid ui positive button" id="XOR">
 					<i class="magic icon"></i>XOR
 				</div>
             </div>
             <div class="column">
-				<div class="fluid ui positive button" onclick="NOT();">
+				<div class="fluid ui positive button" id="NOT">
 					<i class="magic icon"></i>NOT
 				</div>
             </div>
             <div class="column">
-                <div class="fluid ui teal button" onclick="pasteLog();">
+                <div class="fluid ui teal button" id="pasteLog">
                     <i class="code icon"></i>
                 </div>
             </div>
-            <div class="column">
-                <div class="fluid ui grey button">
-                    <i class="settings icon"></i>
-                </div>
-            </div>
 			<div class="column">
-				<div class="fluid ui purple button">
+				<div class="fluid ui purple button" id="helpbtn">
 					<i class="question circle icon"></i> Help
 				</div>
 			</div>
@@ -151,6 +159,7 @@
             </div>
         </div>
     </div>
+    <div class="ui center aligned tiny header">Built with <i class="ui tiny red heart icon"></i>by unsuitable001</i></div>
     <style>
         .delBit.column {
             background-color: #F9A0A0;

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>BitViz - A Bitwise Operation Visualizer</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+</head>
+<body onkeydown="Controls(event);">
+    <div class="ui modal" id="logModal">
+        <div class="header">Execution Log</div>
+        <div class="scrolling content">
+          <p id="logpage"></p>
+        </div>
+        <div class="ui fluid negative button" onclick="this.parentElement.classList.remove('active');">CLOSE</div>
+    </div>
+    <div class="ui center aligned primary segment">
+        <h1> BitViz - A Bitwise Operation Visualizer</h1>
+        <div class="right aligned ui button">
+            <i class="github icon"></i>
+        </div>
+	</div>
+	<div id="cnPanel">
+		<div class="ui ten column centered grid">
+			<div class="column">
+				<div class="fluid ui primary button" onclick="getVar();">
+					<i class="plus icon"></i> New Variable
+				</div>
+			</div>
+			<div class="column">
+				<div class="fluid ui positive button" onclick="RShift();">
+					<i class="angle double right icon"></i>
+				</div>
+            </div>
+            <div class="column">
+				<div class="fluid ui positive button" onclick="LShift();">
+					<i class="angle double left icon"></i>
+				</div>
+			</div>
+			<div class="column">
+				<div class="fluid ui positive button" onclick="AND();">
+					<i class="magic icon"></i>AND
+				</div>
+            </div>
+            <div class="column">
+				<div class="fluid ui positive button" onclick="OR();">
+					<i class="magic icon"></i>OR
+				</div>
+            </div>
+            <div class="column">
+				<div class="fluid ui positive button" onclick="XOR();">
+					<i class="magic icon"></i>XOR
+				</div>
+            </div>
+            <div class="column">
+				<div class="fluid ui positive button" onclick="NOT();">
+					<i class="magic icon"></i>NOT
+				</div>
+            </div>
+            <div class="column">
+                <div class="fluid ui teal button" onclick="pasteLog();">
+                    <i class="code icon"></i>
+                </div>
+            </div>
+            <div class="column">
+                <div class="fluid ui grey button">
+                    <i class="settings icon"></i>
+                </div>
+            </div>
+			<div class="column">
+				<div class="fluid ui purple button">
+					<i class="question circle icon"></i> Help
+				</div>
+			</div>
+		</div>
+	</div>
+    <div class="ui sixteen wide column grid" id="calcArea">
+        <div class="row">
+            <div class="column">
+                <div class="ui one column grid">
+                    <div class="column">
+                        <div class="ui celled one column grid">
+                            <div class="delBit column">Last Deleted Bit</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="eleven wide column">
+                <div class="ui sixteen column grid">
+                    <div class="eight wide column">
+                        <div class="ui celled sixteen column grid">
+                            <div class="bit column">31</div>
+                            <div class="bit column">30</div>
+                            <div class="bit column">29</div>
+                            <div class="bit column">28</div>
+                            <div class="bit column">27</div>
+                            <div class="bit column">26</div>
+                            <div class="bit column">25</div>
+                            <div class="bit column">24</div>
+                            <div class="bit column">23</div>
+                            <div class="bit column">22</div>
+                            <div class="bit column">21</div>
+                            <div class="bit column">20</div>
+                            <div class="bit column">19</div>
+                            <div class="bit column">18</div>
+                            <div class="bit column">17</div>
+                            <div class="bit column">16</div>
+                        </div>
+                    </div>
+                    <div class="eight wide column">
+                        <div class="ui celled sixteen column grid">
+                            <div class="bit column">15</div>
+                            <div class="bit column">14</div>
+                            <div class="bit column">13</div>
+                            <div class="bit column">12</div>
+                            <div class="bit column">11</div>
+                            <div class="bit column">10</div>
+                            <div class="bit column">9</div>
+                            <div class="bit column">8</div>
+                            <div class="bit column">7</div>
+                            <div class="bit column">6</div>
+                            <div class="bit column">5</div>
+                            <div class="bit column">4</div>
+                            <div class="bit column">3</div>
+                            <div class="bit column">2</div>
+                            <div class="bit column">1</div>
+                            <div class="bit column">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui one column grid">
+                    <div class="column">
+                        <div class="ui celled one column grid">
+                            <div class="delBit column">Last Deleted Bit</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="two wide column">
+                <div class="ui one column grid">
+                    <div class="column">
+                        <div class="ui celled two column grid">
+							<div class="column">Variable Name</div>
+							<div class="column" id="rval">Value</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .delBit.column {
+            background-color: #F9A0A0;
+            color: #fff;
+        }
+    </style>
+    <script src="index.js"></script>
+</body>
+</html>

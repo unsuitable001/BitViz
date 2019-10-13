@@ -88,9 +88,22 @@ function pasteLog()
     }
     document.getElementById("logpage").innerHTML = x;
 }
-function getParsedValue(data)
+
+
+function storeVariable(varName, value, type) {
+    // window[varName] = {
+    //     value,
+    //     type,
+    // };
+    sessionStorage.setItem(varName, JSON.stringify({ value, type }));
+}
+function getVariable(varName) {
+    // return window[varName];
+    return JSON.parse(sessionStorage[varName]);
+}
+function getParsedValue(varName)
 {
-    const { value, type } = data;
+    const { value, type } = getVariable(varName);
     switch (type) {
         case 'CHAR':
             return value.charCodeAt(0);
@@ -100,7 +113,9 @@ function getParsedValue(data)
             return value;
     }
 }
-function updateDataValue(varName, value, type){
+function updateDataValue(varName, value){
+    const { type } = getVariable(varName);
+
     switch (type) {
         case 'CHAR':
             value = String.fromCharCode(value).charAt(0);
@@ -110,17 +125,13 @@ function updateDataValue(varName, value, type){
     let parent = document.getElementById(varName);
     let valElem = parent.getElementsByClassName("rval")[0];
     valElem.innerText = value;
-    window[varName] = {
-        value,
-        type,
-    };
+    storeVariable(varName, value, type);
 }
+
+
 function addVar(varName, value, type)
 {
-    window[varName] = {
-        value,
-        type,
-    };
+    storeVariable(varName, value, type);
     document.getElementById("calcArea").insertAdjacentHTML('beforeend',`<div class="row" id="`+varName+`">
     <div class="column">
                 <div class="ui one column grid">
@@ -195,7 +206,7 @@ function addVar(varName, value, type)
         </div>
     </div>
 </div>`);
-getBit(getParsedValue(window[varName]), varName);
+getBit(getParsedValue(varName), varName);
 document.getElementById("cell_"+varName).onclick = function select(){
     this.classList.toggle('blue');
     this.classList.remove('olive');
@@ -223,9 +234,8 @@ function flowControl()
 
 function modifyVal(varName, value)
 {
-    const { type } = window[varName];
-    updateDataValue(varName, value, type);
-    getBit(getParsedValue(window[varName]), varName);
+    updateDataValue(varName, value);
+    getBit(getParsedValue(varName), varName);
 }
 
 function LShift()
@@ -238,8 +248,8 @@ function LShift()
         varName = src[i].innerText;
         let parent = document.getElementById(varName);
         parent.getElementsByClassName("delBit")[1].innerText = "";
-        parent.getElementsByClassName("delBit")[0].innerText = (getParsedValue(window[varName])>>31)&1;
-        modifyVal(varName,getParsedValue(window[varName])<<1);
+        parent.getElementsByClassName("delBit")[0].innerText = (getParsedValue(varName)>>31)&1;
+        modifyVal(varName,getParsedValue(varName)<<1);
         i--;
         logger(varName+'<<=1;');
     }
@@ -256,8 +266,8 @@ function RShift()
         varName = src[i].innerText;
         let parent = document.getElementById(varName);
         parent.getElementsByClassName("delBit")[0].innerText = "";
-        parent.getElementsByClassName("delBit")[1].innerText = getParsedValue(window[varName])&1;
-        modifyVal(varName,getParsedValue(window[varName])>>1);
+        parent.getElementsByClassName("delBit")[1].innerText = getParsedValue(varName)&1;
+        modifyVal(varName,getParsedValue(varName)>>1);
         i--;
         logger(varName+'>>=1;');
     }
@@ -268,13 +278,13 @@ function AND()
     let src =flowControl();
     let dest = src[1];
     src = src[0];
-    let res = window[src[0].innerText];
+    let res = getParsedValue(src[0].innerText);
     logger('_loggerTemp='+src[0].innerText);
     let i = src.length - 1;
     let j = dest.length - 1;
     while(i>0)
     {
-        res&=window[src[i].innerText];
+        res&=getParsedValue(src[i].innerText);
         logger('_loggerTemp&='+src[i].innerText+';');
         i--;
     }
@@ -291,13 +301,13 @@ function OR()
     let src =flowControl();
     let dest = src[1];
     src = src[0];
-    let res = window[src[0].innerText];
+    let res = getParsedValue(src[0].innerText);
     logger('_loggerTemp='+src[0].innerText);
     let i = src.length - 1;
     let j = dest.length - 1;
     while(i>0)
     {
-        res|=window[src[i].innerText];
+        res|= getParsedValue(src[i].innerText);
         logger('_loggerTemp|='+src[i].innerText+';');
         i--;
     }
@@ -314,13 +324,13 @@ function XOR()
     let src =flowControl();
     let dest = src[1];
     src = src[0];
-    let res = window[src[0].innerText];
+    let res = getParsedValue(src[0].innerText);
     logger('_loggerTemp='+src[0].innerText);
     let i = src.length - 1;
     let j = dest.length - 1;
     while(i>0)
     {
-        res^=window[src[i].innerText];
+        res^= getParsedValue(src[i].innerText);
         logger('_loggerTemp^='+src[i].innerText+';');
         i--;
     }
@@ -340,7 +350,7 @@ function NOT()
     let j = dest.length - 1;
     while(j>=0)
     {
-        modifyVal(dest[j].innerText,~(window[src]));
+        modifyVal(dest[j].innerText,~(getParsedValue(src)));
         logger(dest[j].innerText+'=~'+src);
         j--;
     }
@@ -368,7 +378,7 @@ function Controls(e)
         while(i>=0)
         {
             let x = src[i].innerText;
-            modifyVal(x,window[x]+1);
+            modifyVal(x, getParsedValue(x) + 1);
             logger(src[i].innerText+'++;');
             i--;
         }
@@ -380,7 +390,7 @@ function Controls(e)
         while(i>=0)
         {
             let x = src[i].innerText;
-            modifyVal(x,window[x]-1);
+            modifyVal(x, getParsedValue(x) - 1);
             logger(src[i].innerText+'--;');
             i--;
         }
@@ -437,7 +447,7 @@ function Controls(e)
         let j = dest.length - 1;
         while(i>=0)
         {
-            res+=window[src[i].innerText];
+            res+= getParsedValue(src[i].innerText);
             logger('_loggerTemp+='+src[i].innerText+';');
             i--;
         }
@@ -458,7 +468,7 @@ function Controls(e)
         let j = dest.length - 1;
         while(i>=0)
         {
-            res*=window[src[i].innerText];
+            res*= getParsedValue(src[i].innerText);
             logger('_loggerTemp*='+src[i].innerText+';');
             i--;
         }
@@ -476,11 +486,11 @@ function Controls(e)
         let ss = src.length;
         let j = dest.length - 1;
         let i=1;
-        let res = window[src[0].innerText];
+        let res = getParsedValue(src[0].innerText);
         logger('_loggerTemp='+src[i].innerText);
         while(ss>i)
         {
-            res-=window[src[i].innerText];
+            res-= getParsedValue(src[i].innerText);
             logger('_loggerTemp-='+src[i].innerText+';');
             i++;
         }
@@ -498,11 +508,11 @@ function Controls(e)
         let ss = src.length;
         let j = dest.length - 1;
         let i=1;
-        let res = window[src[0].innerText];
+        let res = getParsedValue(src[0].innerText);
         logger('_loggerTemp='+src[i].innerText);
         while(ss>i)
         {
-            res=Math.floor(res/window[src[i].innerText]);
+            res=Math.floor(res / getParsedValue(src[i].innerText));
             logger('_loggerTemp/='+src[i].innerText+';');
             i++;
         }

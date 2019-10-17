@@ -2,18 +2,50 @@ window._logger_flag_ufectrtvo78rtweafdhdg76743hg = 0;
 window.lastdata = "";
 window._log_multiply_factor_jhhdgyfdsgvlsdfyvyukfd = 1;
 sessionStorage.clear();
-document.body.onkeydown = function(){
-    Controls(event);
+// keep modal status for keyup event
+let isInModal = false;
+
+document.body.onkeydown = function(e){
+    if (!isInModal) {
+        // skip event if any modal are open
+        // if user press M key to modify current variable value
+        // then open edit variable modal and call controls after that
+        if (e.code == 'KeyM') {
+            // check selected var item
+            if (flowControl()) {
+                editVarValue.value = '';
+                switchModal('editVarModal');
+            }
+        } else {
+            Controls(e);
+        }
+    }
 }
-document.getElementById("modalClose").onclick = function(){
-    this.parentElement.classList.remove('active');
-}
-document.getElementById("helpClose").onclick = function(){
-    this.parentElement.classList.remove('active');
-}
-document.getElementById("getVar").onclick = function() {
-    getVar();
-}
+
+let modalBox = document.getElementById('modalBox');
+let newVarName = document.getElementById('newVarName');
+let newVarValue = document.getElementById('newVarValue');
+let editVarValue = document.getElementById('editVarValue');
+
+// show help-modal
+document.getElementById('helpBtn').onclick = function() {
+    switchModal('helpModal');
+};
+
+// show var-modal when click on +add new variable button
+document.getElementById('getVar').onclick = function() {
+    showNewVarModal();
+};
+
+// click on Ok button in add new var modal
+document.getElementById('addNewVar').onclick = function() {
+    addNewVar();
+};
+
+// click on Ok button in edit selected var modal
+document.getElementById('editSelectedVar').onclick = function() {
+    editSelectedVar();
+};
 document.getElementById("RShift").onclick = function(){
     RShift();
 }
@@ -35,9 +67,14 @@ document.getElementById("NOT").onclick = function(){
 document.getElementById("pasteLog").onclick = function(){
     pasteLog();
 }
-document.getElementById("helpbtn").onclick = function(){
-    document.getElementById("helpModal").classList.add("active");
-}
+
+// hide modal with close button
+document.querySelectorAll('.modalClose').forEach((el) =>
+    el.addEventListener('click', function() {
+        switchModal(el.dataset.parent, false);
+    }),
+);
+
 window.onbeforeunload = function(){
     return "If you leave the page, your progress will be lost.";
 }
@@ -80,7 +117,7 @@ function pasteLog()
 {
     let i = 0;
     let x = ""
-    document.getElementById("logModal").classList.add("active");
+    switchModal('logModal');
     while(i<window._logger_flag_ufectrtvo78rtweafdhdg76743hg)
     {
         x += sessionStorage.getItem(i) +'<br>';
@@ -321,7 +358,7 @@ function Controls(e)
 {
     if(e.code=="Backslash")
     {
-        getVar();
+        showNewVarModal(); // show add new variable modal
         return false;
     }
     let src =flowControl();
@@ -378,15 +415,7 @@ function Controls(e)
         let x= flowControl();
         x=x[0];
         let i = x.length -1;
-        let y = prompt("Enter Value");
-        if(isNaN(parseInt(y)))
-        {
-            y = y.charCodeAt(0);
-        }
-        else
-        {
-            y =  parseInt(y);
-        }
+        let y = e.newValue; // get new value after edit
         while(i>=0)
         {
             modifyVal(x[i].innerText,y);
@@ -488,16 +517,57 @@ function Controls(e)
     return false;
 }
 
-function getVar()
-{
-    let x = prompt("Enter Variable Name");
-    let y = prompt("Enter Value");
-    if(isNaN(parseInt(y)))
-    {
-        addVar(x, y.charCodeAt(0));
-    }
-    else{
+// helper method to show/hide any modal inside page
+function switchModal(modalId, show = true) {
+    let modal = document.getElementById(modalId);
 
+    if (show) {
+        modalBox.classList.add('active');
+        modal.classList.add('active', 'visible');
+        modal.classList.remove('hidden');
+        isInModal = true;
+    } else {
+        modalBox.classList.remove('active');
+        modal.classList.remove('active', 'visible');
+        modal.classList.add('hidden');
+        isInModal = false;
+    }
+}
+
+// show new variable modal with empty field
+function showNewVarModal() {
+    newVarName.value = '';
+    newVarValue.value = '';
+
+    switchModal('newVarModal');
+}
+
+// submit new variable and hide the modal
+function addNewVar() {
+    let x = newVarName.value;
+    let y = newVarValue.value;
+
+    if (isNaN(parseInt(y))) {
+        addVar(x, y.charCodeAt(0));
+    } else {
         addVar(x, parseInt(y));
     }
+
+    switchModal('newVarModal', false);
+}
+
+// submit new value for selected variable and hide the modal
+function editSelectedVar() {
+    let y = editVarValue.value;
+
+    if (isNaN(parseInt(y))) {
+        y = y.charCodeAt(0);
+    } else {
+        y = parseInt(y);
+    }
+
+    switchModal('editVarModal', false);
+
+    // call Controls method with an object similar to key event but with new value
+    Controls({ code: 'KeyM', newValue: y });
 }

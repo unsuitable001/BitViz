@@ -2,26 +2,18 @@ window._logger_flag_ufectrtvo78rtweafdhdg76743hg = 0;
 window.lastdata = "";
 window._log_multiply_factor_jhhdgyfdsgvlsdfyvyukfd = 1;
 sessionStorage.clear();
-// keep modal status for keyup event
+// keep modal status for keydown event
 let isInModal = false;
 
-// check keyup event for shortcut keys
+// check keydown event for shortcut keys
 window.addEventListener(
-    'keyup',
+    'keydown',
     function(e) {
         if (!isInModal) {
         // skip event if any modal are open
         // if user press M key to modify current variable value
         // then open edit variable modal and call controls after that
-            if (e.code == 'KeyM') {
-                // check selected var item
-                if (flowControl()) {
-                    editVarValue.value = '';
-                    switchModal('editVarModal');
-                }
-            } else {
-                Controls(e);
-            }
+        Controls(e);
         }
     },
     true,
@@ -100,7 +92,7 @@ if(typeof process != 'undefined') {
         return "If you leave the page, your progress will be lost.";
     }
 }
-
+// get the bit representation
 function getBit(x,varName)
 {
     let elm = document.getElementById(varName).getElementsByClassName("bit");
@@ -123,6 +115,7 @@ function getBit(x,varName)
         i--;
     }
 }
+//logs the activity
 function logger(data)
 {
     if(data == window.lastdata)
@@ -136,6 +129,7 @@ function logger(data)
     window._logger_flag_ufectrtvo78rtweafdhdg76743hg++;
     window.lastdata = data;
 }
+//displays the activity
 function pasteLog()
 {
     let i = 0;
@@ -148,6 +142,7 @@ function pasteLog()
     }
     document.getElementById("logpage").innerHTML = x;
 }
+//adds new variable
 function addVar(varName, value)
 {
     window[varName] = value;
@@ -234,7 +229,7 @@ document.getElementById("cell_"+varName).ondblclick = function dblselect(){
     this.classList.toggle('olive');
 };
 }
-
+//controls where to assign what
 function flowControl()
 {
     let selected = document.getElementsByClassName("blue");
@@ -250,7 +245,7 @@ function flowControl()
     }
     return [selected, assign];
 }
-
+//modifies a variable
 function modifyVal(varName, value)
 {
     let parent = document.getElementById(varName);
@@ -259,7 +254,7 @@ function modifyVal(varName, value)
     valElem.innerText = window[varName]
     getBit(parseInt(valElem.innerText), varName);
 }
-
+//left shift operation
 function LShift()
 {
     let src =flowControl();
@@ -277,7 +272,7 @@ function LShift()
     }
 }
 
-
+//right shift operation
 function RShift()
 {
     let src =flowControl();
@@ -294,7 +289,7 @@ function RShift()
         logger(varName+'>>=1;');
     }
 }
-
+//and operation
 function AND()
 {
     let src =flowControl();
@@ -317,7 +312,7 @@ function AND()
         j--;
     }
 }
-
+//or operation
 function OR()
 {
     let src =flowControl();
@@ -340,7 +335,7 @@ function OR()
         j--;
     }
 }
-
+//xor operation
 function XOR()
 {
     let src =flowControl();
@@ -363,7 +358,7 @@ function XOR()
         j--;
     }
 }
-
+//not operation
 function NOT()
 {
     let src =flowControl();
@@ -377,6 +372,7 @@ function NOT()
         j--;
     }
 }
+//keybindings
 function Controls(e)
 {
     if(e.code=="Backslash")
@@ -435,24 +431,19 @@ function Controls(e)
     }
     else if(e.code=="KeyM")
     {
-        let x= flowControl();
-        x=x[0];
-        let i = x.length -1;
-        let y = e.newValue; // get new value after edit
-        while(i>=0)
-        {
-            modifyVal(x[i].innerText,y);
-            logger(x[i].innerText+'='+y+';');
-            i--;
-        }
+        //modify variable
+        editVarValue.value = '';
+        switchModal('editVarModal');
     }
     else if(e.key=="=")
     {
+        //equalize two variables
         modifyVal(src[1][0].innerText,src[0][0].nextSibling.nextSibling.innerText);
         logger(src[1][0].innerText+'='+src[0][0].innerText+';');
     }
     else if(e.key=="+")
     {
+        //increment by 1
         let res = 0;
         let dest = src[1];
         src = src[0];
@@ -474,6 +465,7 @@ function Controls(e)
     }
     else if(e.key=="*")
     {
+        //decrement by 1
         let res = 1;
         let dest = src[1];
         src = src[0];
@@ -495,6 +487,7 @@ function Controls(e)
     }
     else if(e.key=="-")
     {
+        //subtraction
         let dest = src[1];
         src = src[0];
         let ss = src.length;
@@ -517,6 +510,7 @@ function Controls(e)
     }
     else if(e.key=="/")
     {
+        //division
         let dest = src[1];
         src = src[0];
         let ss = src.length;
@@ -590,7 +584,13 @@ function editSelectedVar() {
     }
 
     switchModal('editVarModal', false);
-
-    // call Controls method with an object similar to key event but with new value
-    Controls({ code: 'KeyM', newValue: y });
+    let x= flowControl();
+    x=x[0];
+    let i = x.length -1;
+    while(i>=0)
+    {
+        modifyVal(x[i].innerText,y);
+        logger(x[i].innerText+'='+y+';');
+        i--;
+    }
 }

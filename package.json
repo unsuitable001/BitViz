@@ -1,5 +1,5 @@
 {
-  "name": "bit-viz",
+  "name": "bitviz",
   "productName": "BitViz",
   "version": "0.0.2",
   "description": "A Bitwise Operation Visualizer",
@@ -10,16 +10,16 @@
     "electron:icon": "electron-icon-builder --input=./icon.png --output=build --flatten"
   },
   "build": {
-    "appId": "ir.newvertex.bitviz",
+    "appId": "io.unsuitable001.bitviz",
     "productName": "BitViz",
     "copyright": "MIT"
   },
   "main": "background.js",
-  "repository": "https://github.com/newvertex/BitViz.git",
+  "repository": "https://github.com/unsuitable001/BitViz.git",
   "author": {
-    "name": "Mojtaba Rabiei",
-    "email": "mojtaba.r127@gmail.com",
-    "url": "https://newvertex.ir"
+    "name": "Soumyadip Mondal",
+    "email": "unsuitable001@gmail.com",
+    "url": "https://unsuitable001.github.io"
   },
   "license": "MIT",
   "devDependencies": {

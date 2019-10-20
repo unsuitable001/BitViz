@@ -8,18 +8,70 @@
     <link rel="stylesheet" href="semantic.min.css">
 </head>
 <body>
-    <div class="ui modal" id="logModal">
-        <div class="header">Execution Log</div>
-        <div class="scrolling content">
-          <p id="logpage"></p>
+    <div id="modalBox" class="ui dimmer" style="overflow-y: auto; position:fixed">
+        <div class="ui modal" id="logModal">
+            <div class="header">Execution Log</div>
+            <div class="scrolling content">
+                <p id="logpage"></p>
+            </div>
+            <div class="ui fluid negative button modalClose" data-parent="logModal">CLOSE</div>
         </div>
-        <div class="ui fluid negative button" id="modalClose">CLOSE</div>
-    </div>
-    <div class="ui modal" id="helpModal">
-        <img class="ui huge image" src="qhelp.jpg">
-        <div class="ui fluid negative button" id="helpClose">CLOSE</div>
-        <a href="https://github.com/unsuitable001/BitViz/blob/master/README.md#legends--keybindings" target="_blank"><div class="ui fluid pink button">FULL HELP</div></a>
-        <a href="https://github.com/unsuitable001/BitViz/wiki" target="_blank"><div class="ui fluid black button">WIKI</div></a>
+        <div class="ui small modal transition hidden" id="helpModal" style="margin: 3rem">
+            <img class="ui large image" src="qhelp.jpg" style="margin: auto;">
+            <div class="ui fluid negative button modalClose" data-parent="helpModal">CLOSE</div>
+            <a href="https://github.com/unsuitable001/BitViz/blob/master/README.md#legends--keybindings" target="_blank"><div class="ui fluid pink button">FULL HELP</div></a>
+            <a href="https://github.com/unsuitable001/BitViz/wiki" target="_blank"><div class="ui fluid black button">WIKI</div></a>
+        </div>
+        <div id="newVarModal" class="ui tiny modal hidden transition">
+            <i class="close icon modalClose" data-parent="newVarModal"></i>
+            <div class="header">
+                Define new variable
+            </div>
+            <div class="content">
+                <form class="ui form">
+                    <div class="field">
+                        <label>Enter Variable Name</label>
+                        <input id="newVarName" type="text" name="new-var-name" placeholder="Variable Name">
+                    </div>
+                    <div class="field">
+                        <label>Enter Value</label>
+                        <input id="newVarValue" type="number" name="new-var-value" placeholder="Variable Value">
+                    </div>
+                </form>
+            </div>
+            <div class="actions">
+                <div class="ui black deny button modalClose" data-parent="newVarModal">
+                    Cancel
+                </div>
+                <div id="addNewVar" class="ui positive right labeled icon button">
+                    Ok
+                    <i class="checkmark icon"></i>
+                </div>
+            </div>
+        </div>
+        <div id="editVarModal" class="ui tiny modal hidden transition">
+            <i class="close icon modalClose" data-parent="editVarModal"></i>
+            <div class="header">
+                Modify selected variable
+            </div>
+            <div class="content">
+                <form class="ui form">
+                    <div class="field">
+                        <label>Enter New Value</label>
+                        <input id="editVarValue" type="number" name="edit-var-value" placeholder="Variable Value">
+                    </div>
+                </form>
+            </div>
+            <div class="actions">
+                <div class="ui black deny button modalClose" data-parent="editVarModal">
+                    Cancel
+                </div>
+                <div id="editSelectedVar" class="ui positive right labeled icon button">
+                    Ok
+                    <i class="checkmark icon"></i>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="ui center aligned primary segment">
         <div class="ui small image"><img src="icon.png"></div>
@@ -77,7 +129,7 @@
                 </div>
             </div>
 			<div class="column">
-				<div class="fluid ui purple button" id="helpbtn">
+				<div class="fluid ui purple button" id="helpBtn">
 					<i class="question circle icon"></i> Help
 				</div>
 			</div>

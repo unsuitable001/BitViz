@@ -1,0 +1,30 @@
+{
+  "name": "bit-viz",
+  "productName": "BitViz",
+  "version": "0.0.2",
+  "description": "A Bitwise Operation Visualizer",
+  "scripts": {
+    "serve": "electron .",
+    "build": "electron-builder",
+    "build:all": "electron-builder -mwl",
+    "electron:icon": "electron-icon-builder --input=./icon.png --output=build --flatten"
+  },
+  "build": {
+    "appId": "ir.newvertex.bitviz",
+    "productName": "BitViz",
+    "copyright": "MIT"
+  },
+  "main": "background.js",
+  "repository": "https://github.com/newvertex/BitViz.git",
+  "author": {
+    "name": "Mojtaba Rabiei",
+    "email": "mojtaba.r127@gmail.com",
+    "url": "https://newvertex.ir"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^6.0.12",
+    "electron-builder": "^21.2.0",
+    "electron-icon-builder": "^1.0.1"
+  }
+}

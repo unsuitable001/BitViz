@@ -28,25 +28,53 @@
                 Define new variable
             </div>
             <div class="content">
-                <form class="ui form">
+                <form class="ui form" id="addNewVarP1">
                     <div class="field">
                         <label>Enter Variable Name</label>
-                        <input id="newVarName" type="text" name="new-var-name" placeholder="Variable Name">
+                        <input id="newVarName" type="text" name="new-var-name" placeholder="Variable Name" autofocus>
                     </div>
                     <div class="field">
-                        <label>Enter Value</label>
-                        <input id="newVarValue" type="number" name="new-var-value" placeholder="Variable Value">
+                        <label>Enter Data Type</label>
+                        <select class="ui fluid dropdown" id="newVarType">
+                            <option value="auto">Auto</option>
+                            <option value="int32">Signed Integer 32</option>
+                            <option value="uint32">Unsigned Integer 32</option>
+                            <option value="char">Character</option>
+                        </select>
+                    </div>
+                    <div class="actions">
+                        <button class="ui right floated submit positive right labeled icon button" type="button">
+                            Next
+                            <i class="right arrow icon"></i>
+                        </button>
                     </div>
                 </form>
-            </div>
-            <div class="actions">
-                <div class="ui black deny button modalClose" data-parent="newVarModal">
+                <button class="ui right floated black deny button modalClose" data-parent="newVarModal">
                     Cancel
-                </div>
-                <div id="addNewVar" class="ui positive right labeled icon button">
-                    Ok
-                    <i class="checkmark icon"></i>
-                </div>
+                </button>
+            </div>
+        </div>
+        <div id="newVarModalP2" class="ui tiny modal hidden transition">
+            <i class="close icon modalClose" data-parent="newVarModalP2"></i>
+            <div class="header">
+                Define new variable
+            </div>
+            <div class="content">
+                <form class="ui form" id="addNewVarP2">
+                    <div class="field">
+                        <label>Enter Value</label>
+                        <input id="newVarValue" type="text" name="new-var-value" placeholder="Variable Value" autofocus>
+                    </div>
+                    <div class="actions">
+                        <button class="ui right floated submit positive right labeled icon button" type="button">
+                            Ok
+                            <i class="checkmark icon"></i>
+                        </button>
+                    </div>
+                </form>
+                <button class="ui right floated black deny button modalClose" data-parent="newVarModalP2">
+                    Cancel
+                </button>
             </div>
         </div>
         <div id="editVarModal" class="ui tiny modal hidden transition">
@@ -55,21 +83,21 @@
                 Modify selected variable
             </div>
             <div class="content">
-                <form class="ui form">
+                <form class="ui form" id="editVar">
                     <div class="field">
                         <label>Enter New Value</label>
                         <input id="editVarValue" type="number" name="edit-var-value" placeholder="Variable Value">
                     </div>
+                    <div class="actions">
+                        <div class="ui right floated submit positive right labeled icon button">
+                            Ok
+                            <i class="checkmark icon"></i>
+                        </div>
+                        <div class="ui right floated black deny button modalClose" data-parent="editVarModal">
+                            Cancel
+                        </div>
+                    </div>
                 </form>
-            </div>
-            <div class="actions">
-                <div class="ui black deny button modalClose" data-parent="editVarModal">
-                    Cancel
-                </div>
-                <div id="editSelectedVar" class="ui positive right labeled icon button">
-                    Ok
-                    <i class="checkmark icon"></i>
-                </div>
             </div>
         </div>
     </div>

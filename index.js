@@ -35,13 +35,26 @@ document.getElementById('getVar').onclick = function() {
 };
 
 // click on Ok button in add new var modal
-document.getElementById('addNewVar').onclick = function() {
+document.getElementById('addNewVarP1').onsubmit = function() {
+    newVarValue.value = '';
+    switchModal('newVarModalP2');
+    newVarValue.focus();
+    return false;
+    //event.preventDefault();
+};
+
+// click on Ok button in add new var modal part 2
+document.getElementById('addNewVarP2').onsubmit = function() {
     addNewVar();
+    return false;
+    //event.preventDefault();
 };
 
 // click on Ok button in edit selected var modal
-document.getElementById('editSelectedVar').onclick = function() {
+document.getElementById('editVar').onsubmit = function() {
     editSelectedVar();
+    return false;
+    //event.preventDefault();
 };
 document.getElementById("RShift").onclick = function(){
     RShift();
@@ -432,8 +445,12 @@ function Controls(e)
     else if(e.code=="KeyM")
     {
         //modify variable
-        editVarValue.value = '';
+        switchModal('newVarModal',false);
         switchModal('editVarModal');
+        editVarValue.readOnly = true;
+        editVarValue.focus();
+        editVarValue.value = '';
+        setTimeout(function(){ editVarValue.readOnly = false; }, 100);
     }
     else if(e.key=="=")
     {
@@ -553,10 +570,12 @@ function switchModal(modalId, show = true) {
 
 // show new variable modal with empty field
 function showNewVarModal() {
-    newVarName.value = '';
-    newVarValue.value = '';
-
+    //newVarValue.value = '';
+    newVarName.readOnly = true;
     switchModal('newVarModal');
+    newVarName.focus();
+    newVarName.value = '';
+    setTimeout(function(){ newVarName.readOnly = false; }, 100);
 }
 
 // submit new variable and hide the modal
@@ -569,8 +588,7 @@ function addNewVar() {
     } else {
         addVar(x, parseInt(y));
     }
-
-    switchModal('newVarModal', false);
+    switchModal('newVarModalP2', false);
 }
 
 // submit new value for selected variable and hide the modal

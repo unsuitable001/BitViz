@@ -102,7 +102,7 @@ Soumyadip Mondal(unsuitable001)
 
 A tiny part of Semantic-UI is used to build the UI.
 
-@newvertex for modals & packing it as electron app.
+[@newvertex](https://github.com/newvertex) for modals & packing it as electron app.
 
 ## Connect With Me
 

@@ -1,0 +1,30 @@
+{
+  "name": "bitviz",
+  "productName": "BitViz",
+  "version": "0.0.2",
+  "description": "A Bitwise Operation Visualizer",
+  "scripts": {
+    "serve": "electron .",
+    "build": "electron-builder",
+    "build:all": "electron-builder -mwl",
+    "electron:icon": "electron-icon-builder --input=./icon.png --output=build --flatten"
+  },
+  "build": {
+    "appId": "io.unsuitable001.bitviz",
+    "productName": "BitViz",
+    "copyright": "MIT"
+  },
+  "main": "background.js",
+  "repository": "https://github.com/unsuitable001/BitViz.git",
+  "author": {
+    "name": "Soumyadip Mondal",
+    "email": "unsuitable001@gmail.com",
+    "url": "https://unsuitable001.github.io"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^6.0.12",
+    "electron-builder": "^21.2.0",
+    "electron-icon-builder": "^1.0.1"
+  }
+}

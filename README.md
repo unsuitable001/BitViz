@@ -102,6 +102,8 @@ Soumyadip Mondal(unsuitable001)
 
 A tiny part of Semantic-UI is used to build the UI.
 
+[@newvertex](https://github.com/newvertex) for modals & packing it as electron app.
+
 ## Connect With Me
 
 [Gitter](https://gitter.im/unsuitable001)
@@ -110,4 +112,4 @@ A tiny part of Semantic-UI is used to build the UI.
 
 [Website](https://unsuitable001.github.io)
 
-### Thanks for checking out. Please put a star :P. Share It, Fork It, open a PR.
+### Thanks for checking out. Please put a star :P. Share It, Fork It.

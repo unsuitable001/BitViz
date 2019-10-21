@@ -2,18 +2,60 @@ window._logger_flag_ufectrtvo78rtweafdhdg76743hg = 0;
 window.lastdata = "";
 window._log_multiply_factor_jhhdgyfdsgvlsdfyvyukfd = 1;
 sessionStorage.clear();
-document.body.onkeydown = function(){
-    Controls(event);
-}
-document.getElementById("modalClose").onclick = function(){
-    this.parentElement.classList.remove('active');
-}
-document.getElementById("helpClose").onclick = function(){
-    this.parentElement.classList.remove('active');
-}
-document.getElementById("getVar").onclick = function() {
-    getVar();
-}
+// keep modal status for keydown event
+let isInModal = false;
+
+// check keydown event for shortcut keys
+window.addEventListener(
+    'keydown',
+    function(e) {
+        if (!isInModal) {
+        // skip event if any modal are open
+        // if user press M key to modify current variable value
+        // then open edit variable modal and call controls after that
+        Controls(e);
+        }
+    },
+    true,
+);
+
+let modalBox = document.getElementById('modalBox');
+let newVarName = document.getElementById('newVarName');
+let newVarValue = document.getElementById('newVarValue');
+let editVarValue = document.getElementById('editVarValue');
+
+// show help-modal
+document.getElementById('helpBtn').onclick = function() {
+    switchModal('helpModal');
+};
+
+// show var-modal when click on +add new variable button
+document.getElementById('getVar').onclick = function() {
+    showNewVarModal();
+};
+
+// click on Ok button in add new var modal
+document.getElementById('addNewVarP1').onsubmit = function() {
+    newVarValue.value = '';
+    switchModal('newVarModalP2');
+    newVarValue.focus();
+    return false;
+    //event.preventDefault();
+};
+
+// click on Ok button in add new var modal part 2
+document.getElementById('addNewVarP2').onsubmit = function() {
+    addNewVar();
+    return false;
+    //event.preventDefault();
+};
+
+// click on Ok button in edit selected var modal
+document.getElementById('editVar').onsubmit = function() {
+    editSelectedVar();
+    return false;
+    //event.preventDefault();
+};
 document.getElementById("RShift").onclick = function(){
     RShift();
 }
@@ -35,12 +77,35 @@ document.getElementById("NOT").onclick = function(){
 document.getElementById("pasteLog").onclick = function(){
     pasteLog();
 }
-document.getElementById("helpbtn").onclick = function(){
-    document.getElementById("helpModal").classList.add("active");
+
+// hide modal with close button
+document.querySelectorAll('.modalClose').forEach((el) =>
+    el.addEventListener('click', function() {
+        switchModal(el.dataset.parent, false);
+    }),
+);
+
+// open all link tags with external browser
+if(typeof process != 'undefined') {
+    const { shell } = require('electron');
+
+    document.querySelectorAll("a[href^='http']").forEach((el) =>
+        el.addEventListener('click', function(event) {
+            openLink(el.href);
+            event.preventDefault();
+        }),
+    );
+
+    // open url with external browser
+    function openLink(url) {
+        shell.openExternal(url);
+    }
+} else {
+    window.onbeforeunload = function(){
+        return "If you leave the page, your progress will be lost.";
+    }
 }
-window.onbeforeunload = function(){
-    return "If you leave the page, your progress will be lost.";
-}
+// get the bit representation
 function getBit(x,varName)
 {
     let elm = document.getElementById(varName).getElementsByClassName("bit");
@@ -63,6 +128,7 @@ function getBit(x,varName)
         i--;
     }
 }
+//logs the activity
 function logger(data)
 {
     if(data == window.lastdata)
@@ -76,11 +142,12 @@ function logger(data)
     window._logger_flag_ufectrtvo78rtweafdhdg76743hg++;
     window.lastdata = data;
 }
+//displays the activity
 function pasteLog()
 {
     let i = 0;
     let x = ""
-    document.getElementById("logModal").classList.add("active");
+    switchModal('logModal');
     while(i<window._logger_flag_ufectrtvo78rtweafdhdg76743hg)
     {
         x += sessionStorage.getItem(i) +'<br>';
@@ -88,6 +155,7 @@ function pasteLog()
     }
     document.getElementById("logpage").innerHTML = x;
 }
+//adds new variable
 function addVar(varName, value)
 {
     window[varName] = value;
@@ -174,7 +242,7 @@ document.getElementById("cell_"+varName).ondblclick = function dblselect(){
     this.classList.toggle('olive');
 };
 }
-
+//controls where to assign what
 function flowControl()
 {
     let selected = document.getElementsByClassName("blue");
@@ -190,7 +258,7 @@ function flowControl()
     }
     return [selected, assign];
 }
-
+//modifies a variable
 function modifyVal(varName, value)
 {
     let parent = document.getElementById(varName);
@@ -199,7 +267,7 @@ function modifyVal(varName, value)
     valElem.innerText = window[varName]
     getBit(parseInt(valElem.innerText), varName);
 }
-
+//left shift operation
 function LShift()
 {
     let src =flowControl();
@@ -217,7 +285,7 @@ function LShift()
     }
 }
 
-
+//right shift operation
 function RShift()
 {
     let src =flowControl();
@@ -234,7 +302,7 @@ function RShift()
         logger(varName+'>>=1;');
     }
 }
-
+//and operation
 function AND()
 {
     let src =flowControl();
@@ -257,7 +325,7 @@ function AND()
         j--;
     }
 }
-
+//or operation
 function OR()
 {
     let src =flowControl();
@@ -280,7 +348,7 @@ function OR()
         j--;
     }
 }
-
+//xor operation
 function XOR()
 {
     let src =flowControl();
@@ -303,7 +371,7 @@ function XOR()
         j--;
     }
 }
-
+//not operation
 function NOT()
 {
     let src =flowControl();
@@ -317,11 +385,12 @@ function NOT()
         j--;
     }
 }
+//keybindings
 function Controls(e)
 {
     if(e.code=="Backslash")
     {
-        getVar();
+        showNewVarModal(); // show add new variable modal
         return false;
     }
     let src =flowControl();
@@ -375,32 +444,23 @@ function Controls(e)
     }
     else if(e.code=="KeyM")
     {
-        let x= flowControl();
-        x=x[0];
-        let i = x.length -1;
-        let y = prompt("Enter Value");
-        if(isNaN(parseInt(y)))
-        {
-            y = y.charCodeAt(0);
-        }
-        else
-        {
-            y =  parseInt(y);
-        }
-        while(i>=0)
-        {
-            modifyVal(x[i].innerText,y);
-            logger(x[i].innerText+'='+y+';');
-            i--;
-        }
+        //modify variable
+        switchModal('newVarModal',false);
+        switchModal('editVarModal');
+        editVarValue.readOnly = true;
+        editVarValue.focus();
+        editVarValue.value = '';
+        setTimeout(function(){ editVarValue.readOnly = false; }, 100);
     }
     else if(e.key=="=")
     {
+        //equalize two variables
         modifyVal(src[1][0].innerText,src[0][0].nextSibling.nextSibling.innerText);
         logger(src[1][0].innerText+'='+src[0][0].innerText+';');
     }
     else if(e.key=="+")
     {
+        //increment by 1
         let res = 0;
         let dest = src[1];
         src = src[0];
@@ -422,6 +482,7 @@ function Controls(e)
     }
     else if(e.key=="*")
     {
+        //decrement by 1
         let res = 1;
         let dest = src[1];
         src = src[0];
@@ -443,6 +504,7 @@ function Controls(e)
     }
     else if(e.key=="-")
     {
+        //subtraction
         let dest = src[1];
         src = src[0];
         let ss = src.length;
@@ -465,6 +527,7 @@ function Controls(e)
     }
     else if(e.key=="/")
     {
+        //division
         let dest = src[1];
         src = src[0];
         let ss = src.length;
@@ -488,16 +551,64 @@ function Controls(e)
     return false;
 }
 
-function getVar()
-{
-    let x = prompt("Enter Variable Name");
-    let y = prompt("Enter Value");
-    if(isNaN(parseInt(y)))
-    {
-        addVar(x, y.charCodeAt(0));
-    }
-    else{
+// helper method to show/hide any modal inside page
+function switchModal(modalId, show = true) {
+    let modal = document.getElementById(modalId);
 
+    if (show) {
+        modalBox.classList.add('active');
+        modal.classList.add('active', 'visible');
+        modal.classList.remove('hidden');
+        isInModal = true;
+    } else {
+        modalBox.classList.remove('active');
+        modal.classList.remove('active', 'visible');
+        modal.classList.add('hidden');
+        isInModal = false;
+    }
+}
+
+// show new variable modal with empty field
+function showNewVarModal() {
+    //newVarValue.value = '';
+    newVarName.readOnly = true;
+    switchModal('newVarModal');
+    newVarName.focus();
+    newVarName.value = '';
+    setTimeout(function(){ newVarName.readOnly = false; }, 100);
+}
+
+// submit new variable and hide the modal
+function addNewVar() {
+    let x = newVarName.value;
+    let y = newVarValue.value;
+
+    if (isNaN(parseInt(y))) {
+        addVar(x, y.charCodeAt(0));
+    } else {
         addVar(x, parseInt(y));
+    }
+    switchModal('newVarModalP2', false);
+}
+
+// submit new value for selected variable and hide the modal
+function editSelectedVar() {
+    let y = editVarValue.value;
+
+    if (isNaN(parseInt(y))) {
+        y = y.charCodeAt(0);
+    } else {
+        y = parseInt(y);
+    }
+
+    switchModal('editVarModal', false);
+    let x= flowControl();
+    x=x[0];
+    let i = x.length -1;
+    while(i>=0)
+    {
+        modifyVal(x[i].innerText,y);
+        logger(x[i].innerText+'='+y+';');
+        i--;
     }
 }

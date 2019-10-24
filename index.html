@@ -42,16 +42,16 @@
                             <option value="char">Character</option>
                         </select>
                     </div>
-                    <div class="actions">
-                        <button class="ui right floated submit positive right labeled icon button" type="button">
-                            Next
-                            <i class="right arrow icon"></i>
-                        </button>
-                    </div>
                 </form>
-                <button class="ui right floated black deny button modalClose" data-parent="newVarModal">
-                    Cancel
-                </button>
+                <div class="actions">
+                    <button class="ui right floated positive right labeled icon button" type="button" id="nvmp1button">
+                        Next
+                        <i class="right arrow icon"></i>
+                    </button>
+                    <button class="ui right floated black deny button modalClose" data-parent="newVarModal">
+                        Cancel
+                    </button>
+                </div>
             </div>
         </div>
         <div id="newVarModalP2" class="ui tiny modal hidden transition">
@@ -65,16 +65,16 @@
                         <label>Enter Value</label>
                         <input id="newVarValue" type="text" name="new-var-value" placeholder="Variable Value" autofocus>
                     </div>
-                    <div class="actions">
-                        <button class="ui right floated submit positive right labeled icon button" type="button">
-                            Ok
-                            <i class="checkmark icon"></i>
-                        </button>
-                    </div>
                 </form>
-                <button class="ui right floated black deny button modalClose" data-parent="newVarModalP2">
-                    Cancel
-                </button>
+                <div class="actions">
+                    <button class="ui right floated positive right labeled icon button" type="button" id="nvmp2button">
+                        Ok
+                        <i class="checkmark icon"></i>
+                    </button>
+                    <button class="ui right floated black deny button modalClose" data-parent="newVarModalP2">
+                        Cancel
+                    </button>
+                </div>
             </div>
         </div>
         <div id="editVarModal" class="ui tiny modal hidden transition">
@@ -88,16 +88,16 @@
                         <label>Enter New Value</label>
                         <input id="editVarValue" type="number" name="edit-var-value" placeholder="Variable Value">
                     </div>
-                    <div class="actions">
-                        <div class="ui right floated submit positive right labeled icon button">
-                            Ok
-                            <i class="checkmark icon"></i>
-                        </div>
-                        <div class="ui right floated black deny button modalClose" data-parent="editVarModal">
-                            Cancel
-                        </div>
-                    </div>
                 </form>
+                <div class="actions">
+                    <div class="ui right floated positive right labeled icon button" id="evmbutton">
+                        Ok
+                        <i class="checkmark icon"></i>
+                    </div>
+                    <div class="ui right floated black deny button modalClose" data-parent="editVarModal">
+                        Cancel
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -163,9 +163,9 @@
 			</div>
 		</div>
 	</div>
-    <div class="ui sixteen wide column grid" id="calcArea">
+    <div class="ui fifteen column center aligned grid" id="calcArea">
         <div class="row">
-            <div class="column">
+            <div class="one wide column">
                 <div class="ui one column grid">
                     <div class="column">
                         <div class="ui celled one column grid">
@@ -218,7 +218,7 @@
                     </div>
                 </div>
             </div>
-            <div class="column">
+            <div class="one wide column">
                 <div class="ui one column grid">
                     <div class="column">
                         <div class="ui celled one column grid">

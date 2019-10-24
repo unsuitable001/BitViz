@@ -35,26 +35,35 @@ document.getElementById('getVar').onclick = function() {
 };
 
 // click on Ok button in add new var modal
-document.getElementById('addNewVarP1').onsubmit = function() {
+document.getElementById('nvmp1button').onclick = function() {
     newVarValue.value = '';
     switchModal('newVarModalP2');
     newVarValue.focus();
+}
+
+document.getElementById('addNewVarP1').onsubmit = function() {
+    document.getElementById('nvmp1button').click();
     return false;
-    //event.preventDefault();
 };
 
 // click on Ok button in add new var modal part 2
-document.getElementById('addNewVarP2').onsubmit = function() {
+document.getElementById('nvmp2button').onclick = function() {
     addNewVar();
+}
+
+document.getElementById('addNewVarP2').onsubmit = function() {
+    document.getElementById('nvmp2button').click();
     return false;
-    //event.preventDefault();
 };
 
 // click on Ok button in edit selected var modal
-document.getElementById('editVar').onsubmit = function() {
+document.getElementById('evmbutton').onclick = function() {
     editSelectedVar();
+}
+
+document.getElementById('editVar').onsubmit = function() {
+    document.getElementById('evmbutton').click();
     return false;
-    //event.preventDefault();
 };
 document.getElementById("RShift").onclick = function(){
     RShift();

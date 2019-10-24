@@ -22,6 +22,7 @@ window.addEventListener(
 let modalBox = document.getElementById('modalBox');
 let newVarName = document.getElementById('newVarName');
 let newVarValue = document.getElementById('newVarValue');
+let newVarType = document.getElementById('newVarType');
 let editVarValue = document.getElementById('editVarValue');
 
 // show help-modal
@@ -118,7 +119,8 @@ if(typeof process != 'undefined') {
 function getBit(x,varName)
 {
     let elm = document.getElementById(varName).getElementsByClassName("bit");
-    let i=31;
+    let type = document.getElementById('cell_'+varName).getAttribute('data-type');
+    let i = 31;
     while(i>=0)
     {
         if(x&1)
@@ -133,7 +135,12 @@ function getBit(x,varName)
             elm[i].classList.add('grey');
             elm[i].innerText="0";
         }
-        x>>=1;
+        if(type!='int32'){
+            x>>>=1;
+        }
+        else{
+            x>>=1;
+        }
         i--;
     }
 }
@@ -165,9 +172,8 @@ function pasteLog()
     document.getElementById("logpage").innerHTML = x;
 }
 //adds new variable
-function addVar(varName, value)
+function addVar(varName, value, type)
 {
-    window[varName] = value;
     document.getElementById("calcArea").insertAdjacentHTML('beforeend',`<div class="row" id="`+varName+`">
     <div class="column">
                 <div class="ui one column grid">
@@ -235,13 +241,26 @@ function addVar(varName, value)
         <div class="ui one column grid">
             <div class="column">
                 <div class="ui celled two column grid">
-                    <div class="column" id="cell_`+varName+`">`+varName+`</div>
+                    <div class="column" id="cell_`+varName+`" data-type="`+type+`">`+varName+`</div>
                     <div class="rval column">`+value+`</div>
                 </div>
             </div>
         </div>
     </div>
 </div>`);
+if(type=='uint32'){
+    logger('unsigned int '+varName+'='+value+';');
+    value = parseInt(value,10)>>>0;
+}
+else if(type=='int32'){
+    logger('int '+varName+'='+value+';');
+    value = parseInt(value,10)<<0;
+}
+else{
+    logger('char '+varName+'="'+value+'";');
+    value = value.charCodeAt(0)>>>0;
+}
+window[varName] = value;
 getBit(value, varName);
 document.getElementById("cell_"+varName).onclick = function select(){
     this.classList.toggle('blue');
@@ -272,9 +291,23 @@ function modifyVal(varName, value)
 {
     let parent = document.getElementById(varName);
     let valElem = parent.getElementsByClassName("rval")[0];
+    let type = document.getElementById('cell_'+varName).getAttribute('data-type');
+    if(type=='uint32'){
+        value = value>>>0;
+    }
+    else if(type=='int32'){
+        value = value<<0;
+    }
     window[varName] = value;
-    valElem.innerText = window[varName]
-    getBit(parseInt(valElem.innerText), varName);
+    if(type=='char')
+    {
+        valElem.innerText = String.fromCharCode(window[varName]);
+        value = value&((1<<9)-1);
+    }
+    else{
+        valElem.innerText = window[varName];
+    }
+    getBit(value, varName);
 }
 //left shift operation
 function LShift()
@@ -286,9 +319,16 @@ function LShift()
     {
         varName = src[i].innerText;
         let parent = document.getElementById(varName);
+        let type = document.getElementById('cell_'+varName).getAttribute('data-type');
         parent.getElementsByClassName("delBit")[1].innerText = "";
         parent.getElementsByClassName("delBit")[0].innerText = (window[varName]>>31)&1;
-        modifyVal(varName,window[varName]<<1);
+        if(type=='char'){
+            parent.getElementsByClassName("delBit")[0].innerText = (window[varName]>>7)&1;
+            modifyVal(varName,window[varName]<<1);
+        }
+        else{
+            modifyVal(varName,window[varName]<<1);
+        }
         i--;
         logger(varName+'<<=1;');
     }
@@ -306,7 +346,18 @@ function RShift()
         let parent = document.getElementById(varName);
         parent.getElementsByClassName("delBit")[0].innerText = "";
         parent.getElementsByClassName("delBit")[1].innerText = window[varName]&1;
-        modifyVal(varName,window[varName]>>1);
+        let type = document.getElementById('cell_'+varName).getAttribute('data-type');
+        if(type!="int32"){
+            if(type=='char'){
+                modifyVal(varName,window[varName]>>>1);
+            }
+            else{
+                modifyVal(varName,window[varName]>>>1);
+            }
+        }
+        else{
+            modifyVal(varName,window[varName]>>1);
+        }
         i--;
         logger(varName+'>>=1;');
     }
@@ -591,11 +642,16 @@ function showNewVarModal() {
 function addNewVar() {
     let x = newVarName.value;
     let y = newVarValue.value;
-
-    if (isNaN(parseInt(y))) {
-        addVar(x, y.charCodeAt(0));
-    } else {
-        addVar(x, parseInt(y));
+    let type = newVarType.value;
+    if(type == "auto"){
+        if (isNaN(parseInt(y))) {
+            addVar(x, y, 'char');
+        } else {
+            addVar(x, y, 'int32');
+        }
+    }
+    else {
+        addVar(x,y,type)
     }
     switchModal('newVarModalP2', false);
 }

@@ -5,6 +5,18 @@ sessionStorage.clear();
 // keep modal status for keydown event
 let isInModal = false;
 
+//fitting to screen
+if(screen.width<1364){
+    document.body.style.width = "1508px";
+    document.body.style.overflowX = "scroll";
+}
+
+//on resize
+
+window.onresize = function() {
+    fitScreen();
+}
+
 // check keydown event for shortcut keys
 window.addEventListener(
     'keydown',
@@ -348,12 +360,7 @@ function RShift()
         parent.getElementsByClassName("delBit")[1].innerText = window[varName]&1;
         let type = document.getElementById('cell_'+varName).getAttribute('data-type');
         if(type!="int32"){
-            if(type=='char'){
-                modifyVal(varName,window[varName]>>>1);
-            }
-            else{
-                modifyVal(varName,window[varName]>>>1);
-            }
+            modifyVal(varName,window[varName]>>>1);
         }
         else{
             modifyVal(varName,window[varName]>>1);
@@ -511,6 +518,17 @@ function Controls(e)
         editVarValue.focus();
         editVarValue.value = '';
         setTimeout(function(){ editVarValue.readOnly = false; }, 100);
+    }
+    else if(e.code=="KeyD")
+    {
+        //delete variable
+        src = src[0];
+        let i = src.length-1;
+        while(i>=0)
+        {
+            document.getElementById(src[i].innerText).remove();
+            i--;
+        }
     }
     else if(e.key=="=")
     {
@@ -677,3 +695,16 @@ function editSelectedVar() {
         i--;
     }
 }
+
+
+function fitScreen(){
+    if(screen.width<1364){
+        document.body.style.width = "1508px";
+        document.body.style.overflowX = "scroll";
+    }
+    else{
+        document.body.style.width = "100%";
+        document.body.style.overflowX = "auto";
+    }
+}
+

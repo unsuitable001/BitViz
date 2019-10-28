@@ -5,6 +5,17 @@
 # BitViz
 A Bitwise Operation Visualizer - casting the beauty of fiddling bits on your screen.
 
+## Build
+
+If you want to build a binary for your platform, do this :
+
+```bash
+yarn install
+yarn build
+```
+
+Binary will be in the `dist` folder
+
 ## Installation
 * [Live Website](https://unsuitable001.github.io/BitViz) - no installation required
 * Firefox Addon - [See Manual Installation Guide](https://extensionworkshop.com/documentation/develop/temporary-installation-in-firefox/) - (I'm trying my best to make it available in Mozilla Addon Store)
@@ -86,6 +97,7 @@ Increment by 1
 
 ### More Keybindings
 
+* Delete variables -> D
 * Equalizing two variables ->     = (from primary to secondary selection)
 * Multiplying between variables ->    *
 * Adding between variables ->     +
